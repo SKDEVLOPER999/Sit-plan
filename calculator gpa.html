@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSC GPA Calculator - MD SHAYON ISLAM</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Top Developer Header */
+    .top-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .top-header h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #94a3b8;
+    }
+
+    .top-header h1.dev-name {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 4px;
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .calculator-card {
+      background-color: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    h1.app-title {
+      text-align: center;
+      color: #38bdf8;
+      margin-bottom: 8px;
+      font-size: 24px;
+    }
+
+    p.subtitle {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .subject-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .subject-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 0.8fr;
+      gap: 10px;
+      align-items: center;
+      background: #0f172a;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+
+    .subject-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #e2e8f0;
+    }
+
+    .tag {
+      font-size: 11px;
+      background-color: #3b82f6;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    .tag-4th {
+      background-color: #eab308;
+    }
+
+    input {
+      background-color: #1e293b;
+      border: 1px solid #475569;
+      color: #f8fafc;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: #38bdf8;
+    }
+
+    /* Live Subject Grade Display */
+    .live-grade {
+      text-align: center;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background-color: #334155;
+      color: #94a3b8;
+    }
+
+    .live-grade.aplus { background-color: #15803d; color: #ffffff; }
+    .live-grade.a { background-color: #16a34a; color: #ffffff; }
+    .live-grade.aminus { background-color: #65a30d; color: #ffffff; }
+    .live-grade.b { background-color: #ca8a04; color: #ffffff; }
+    .live-grade.c { background-color: #d97706; color: #ffffff; }
+    .live-grade.d { background-color: #ea580c; color: #ffffff; }
+    .live-grade.f { background-color: #dc2626; color: #ffffff; }
+
+    .btn-calculate {
+      width: 100%;
+      background-color: #0284c7;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-calculate:hover {
+      background-color: #0369a1;
+    }
+
+    .result-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: #0f172a;
+      border-radius: 10px;
+      border: 1px solid #38bdf8;
+      text-align: center;
+      display: none;
+    }
+
+    .result-title {
+      font-size: 16px;
+      color: #94a3b8;
+    }
+
+    .gpa-value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #4ade80;
+      margin: 8px 0;
+    }
+
+    .grade-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .grade-fail { background-color: #ef4444; color: white; }
+    .grade-pass { background-color: #22c55e; color: white; }
+
+    /* Footer Style */
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    footer span {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    @media (max-width: 500px) {
+      .subject-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header with Name -->
+  <div class="top-header">
+    <h2>Developed By</h2>
+    <h1 class="dev-name">MD SHAYON ISLAM</h1>
+  </div>
+
+  <div class="calculator-card">
+    <h1 class="app-title">HSC GPA Calculator</h1>
+    <p class="subtitle">আপনার বিষয়গুলোর নম্বর ইনপুট দিন (সাথে সাথে গ্রেড দেখুন)</p>
+
+    <form id="gpaForm">
+      <div class="subject-group">
+        
+        <!-- Bangla -->
+        <div class="subject-row">
+          <div class="subject-name">বাংলা (১ম ও ২য়) <span class="tag">২০০</span></div>
+          <input type="number" placeholder="নম্বর (0-200)" min="0" max="200" id="bangla_marks" data-max="200" required>
+          <div class="live-grade" id="bangla_grade">--</div>
+        </div>
+
+        <!-- English -->
+        <div class="subject-row">
+          <div class="subject-name">ইংরেজি (১ম ও ২য়) <span class="tag">২০০</span></div>
+          <input type="number" placeholder="নম্বর (0-200)" min="0" max="200" id="english_marks" data-max="200" required>
+          <div class="live-grade" id="english_grade">--</div>
+        </div>
+
+        <!-- ICT -->
+        <div class="subject-row">
+          <div class="subject-name">ICT <span class="tag">১০০</span></div>
+          <input type="number" placeholder="নম্বর (0-100)" min="0" max="100" id="ict_marks" data-max="100" required>
+          <div class="live-grade" id="ict_grade">--</div>
+        </div>
+
+        <!-- Group Subject 1 -->
+        <div class="subject-row">
+          <div class="subject-name">গ্রুপ বিষয় ১ (১ম ও ২য়) <span class="tag">২০০</span></div>
+          <input type="number" placeholder="নম্বর (0-200)" min="0" max="200" id="sub1_marks" data-max="200" required>
+          <div class="live-grade" id="sub1_grade">--</div>
+        </div>
+
+        <!-- Group Subject 2 -->
+        <div class="subject-row">
+          <div class="subject-name">গ্রুপ বিষয় ২ (১ম ও ২য়) <span class="tag">২০০</span></div>
+          <input type="number" placeholder="নম্বর (0-200)" min="0" max="200" id="sub2_marks" data-max="200" required>
+          <div class="live-grade" id="sub2_grade">--</div>
+        </div>
+
+        <!-- Group Subject 3 -->
+        <div class="subject-row">
+          <div class="subject-name">গ্রুপ বিষয় ৩ (১ম ও ২য়) <span class="tag">২০০</span></div>
+          <input type="number" placeholder="মোট নম্বর (0-200)" min="0" max="200" id="sub3_marks" data-max="200" required>
+          <div class="live-grade" id="sub3_grade">--</div>
+        </div>
+
+        <!-- 4th Subject -->
+        <div class="subject-row">
+          <div class="subject-name">৪র্থ বিষয় <span class="tag tag-4th">Optional</span></div>
+          <input type="number" placeholder="নম্বর (0-200)" min="0" max="200" id="sub4_marks" data-max="200" required>
+          <div class="live-grade" id="sub4_grade">--</div>
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn-calculate">GPA হিসাব করুন</button>
+    </form>
+
+    <div id="resultBox" class="result-box">
+      <div class="result-title">আপনার ফলাফল:</div>
+      <div class="gpa-value" id="gpaValue">0.00</div>
+      <div id="gradeBadge" class="grade-badge">--</div>
+    </div>
+  </div>
+
+  <!-- Footer with name -->
+  <footer>
+    Created & Designed by <span>MD SHAYON ISLAM</span>
+  </footer>
+
+  <script>
+    // নম্বর অনুযায়ী পয়েন্ট এবং গ্রেড ডিটেক্ট করার ফাংশন
+    function calculateGrade(marks, totalMarks) {
+      let percent = (marks / totalMarks) * 100;
+      
+      if (percent >= 80) return { grade: "A+", point: 5.0, css: "aplus" };
+      if (percent >= 70) return { grade: "A", point: 4.0, css: "a" };
+      if (percent >= 60) return { grade: "A-", point: 3.5, css: "aminus" };
+      if (percent >= 50) return { grade: "B", point: 3.0, css: "b" };
+      if (percent >= 40) return { grade: "C", point: 2.0, css: "c" };
+      if (percent >= 33) return { grade: "D", point: 1.0, css: "d" };
+      return { grade: "F", point: 0.0, css: "f" };
+    }
+
+    // প্রতিটা ইনপুটে নম্বর টাইপ করার সাথে সাথে গ্রেড দেখানো
+    const inputs = document.querySelectorAll('input[type="number"]');
+
+    inputs.forEach(input => {
+      input.addEventListener('input', function() {
+        const val = parseFloat(this.value);
+        const maxMarks = parseFloat(this.getAttribute('data-max'));
+        const gradeBox = document.getElementById(this.id.replace('_marks', '_grade'));
+
+        if (isNaN(val) || val < 0) {
+          gradeBox.innerText = "--";
+          gradeBox.className = "live-grade";
+          return;
+        }
+
+        const res = calculateGrade(val, maxMarks);
+        gradeBox.innerText = res.grade + " (" + res.point.toFixed(2) + ")";
+        gradeBox.className = "live-grade " + res.css;
+      });
+    });
+
+    // ফাইনাল GPA ক্যালকুলেশন
+    document.getElementById('gpaForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const getVal = id => parseFloat(document.getElementById(id).value) || 0;
+
+      const bg = calculateGrade(getVal('bangla_marks'), 200);
+      const en = calculateGrade(getVal('english_marks'), 200);
+      const ict = calculateGrade(getVal('ict_marks'), 100);
+      const s1 = calculateGrade(getVal('sub1_marks'), 200);
+      const s2 = calculateGrade(getVal('sub2_marks'), 200);
+      const s3 = calculateGrade(getVal('sub3_marks'), 200);
+      const s4 = calculateGrade(getVal('sub4_marks'), 200);
+
+      // কোনো মেইন সাবজেক্টে F থাকলে ফেল
+      const isFail = (bg.point === 0 || en.point === 0 || ict.point === 0 || s1.point === 0 || s2.point === 0 || s3.point === 0);
+
+      const resultBox = document.getElementById('resultBox');
+      const gpaValue = document.getElementById('gpaValue');
+      const gradeBadge = document.getElementById('gradeBadge');
+
+      if (isFail) {
+        gpaValue.innerText = "0.00";
+        gradeBadge.innerText = "F (Failed)";
+        gradeBadge.className = "grade-badge grade-fail";
+      } else {
+        const mainPoints = bg.point + en.point + ict.point + s1.point + s2.point + s3.point;
+        let extraPoint = s4.point > 2.0 ? (s4.point - 2.0) : 0;
+        let totalGPA = (mainPoints + extraPoint) / 6.0;
+
+        if (totalGPA > 5.0) totalGPA = 5.0;
+
+        const finalGPA = totalGPA.toFixed(2);
+
+        gpaValue.innerText = finalGPA;
+        gradeBadge.innerText = finalGPA >= 5.0 ? "A+ (Passed)" : "Passed";
+        gradeBadge.className = "grade-badge grade-pass";
+      }
+
+      resultBox.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
